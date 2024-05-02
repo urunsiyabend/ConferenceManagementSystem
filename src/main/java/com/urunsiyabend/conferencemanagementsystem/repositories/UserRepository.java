@@ -2,6 +2,7 @@ package com.urunsiyabend.conferencemanagementsystem.repositories;
 
 import com.urunsiyabend.conferencemanagementsystem.entities.User;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +47,6 @@ public class UserRepository implements IUserRepository {
     }
 
     @Override
-    public List<User> findAll() {
-        return List.copyOf(users.values());
+    public List<User> findAll() { return List.copyOf(users.values());
     }
 }
