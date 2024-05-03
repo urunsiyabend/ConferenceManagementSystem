@@ -12,16 +12,17 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 @AllArgsConstructor
 @Builder
 @Entity
-@Table(name = "User")
+@Table(name = "user")
 
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String email;
+    private int id;
 
+    @Column(name = "Mail", unique = true, nullable = false)
+    private String email;
     @Column(name = "Password", nullable=false)
     private String password;
-
     @Column(name = "Name", nullable=false)
     private String name;
     @Column(name = "Surname", nullable=false)

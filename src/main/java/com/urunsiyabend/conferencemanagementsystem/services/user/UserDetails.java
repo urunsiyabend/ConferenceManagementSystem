@@ -43,21 +43,7 @@ public class UserDetails implements org.springframework.security.core.userdetail
     @Override
     public boolean isEnabled() { return true; }
 
-    @RequestMapping(value = "mail")
-    public User GetByMail(HashMap<String,User> users, String email){
-        User founduser = null;
-        for (User user : users.values()) {
-           if (user.getEmail().equals(email)) {
-               founduser = user;
-           }
-        }
-        return founduser;
-    }
 
-    @RequestMapping(value = "users")
-    public List<User> fetchAllUser(HashMap<String,User> users){
-        return List.copyOf(users.values());
-    }
 
 
 
