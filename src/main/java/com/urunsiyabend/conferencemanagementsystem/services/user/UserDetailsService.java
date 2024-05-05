@@ -28,13 +28,13 @@ public class UserDetailsService implements org.springframework.security.core.use
 
     @RequestMapping(value = "mail")
     public User GetByMail(List<User> users, String email){
-        User founduser = null;
+        User foundUser = null;
         for (User user : users) {
             if (user.getEmail().equals(email)) {
-                founduser = user;
+                foundUser = user;
             }
         }
-        return founduser;
+        return foundUser;
     }
 
     @RequestMapping(value = "users")
