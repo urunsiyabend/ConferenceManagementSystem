@@ -2,13 +2,12 @@ package com.urunsiyabend.conferencemanagementsystem.repositories;
 
 import com.urunsiyabend.conferencemanagementsystem.entities.Session;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class SessionRepository implements ISessionRepository {
     HashMap<Integer , Session> sessions = new HashMap<>();
 
@@ -33,16 +32,12 @@ public class SessionRepository implements ISessionRepository {
     public void delete(Session session) {
 
     }
-    public Optional<Session> findById(int id) {
+    public Optional<Session> findSessionById(int id) {
         return Optional.ofNullable(sessions.get(id));
     }
 
-    public void delete(Integer id) {
+    public void delete(int id) {
         sessions.remove(id);
-    }
-
-    public Optional<Session> findById(Integer id) {
-        return Optional.ofNullable(sessions.get(id));
     }
 
     public List<Session> findAll() {

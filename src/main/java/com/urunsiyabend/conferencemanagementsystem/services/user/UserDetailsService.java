@@ -26,18 +26,10 @@ public class UserDetailsService implements org.springframework.security.core.use
         return new UserDetails(user);
     }
 
-    @RequestMapping(value = "mail")
-    public User GetByMail(List<User> users, String email){
-        User foundUser = null;
-        for (User user : users) {
-            if (user.getEmail().equals(email)) {
-                foundUser = user;
-            }
-        }
-        return foundUser;
+    public User GetByMail(String email){
+        return userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    @RequestMapping(value = "users")
     public List<User> fetchAllUser(){
         return users;
     }

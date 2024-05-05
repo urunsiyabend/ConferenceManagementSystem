@@ -9,7 +9,6 @@ public interface IConferenceRepository {
     void create(Conference conference);
     void update(Conference conference);
     void delete(Conference conference);
-    Optional<Conference> findById(Long id);
+    Optional<Conference> findConferenceById(int id);
     Collection<Conference> findAll();
-
 }

@@ -9,6 +9,6 @@ public interface ISessionRepository {
     void create(Session session);
     void update(Session session);
     void delete(Session session);
-    Optional<Session> findById(long id);
+    Optional<Session> findSessionById(int id);
     Collection<Session> findAll();
 }
