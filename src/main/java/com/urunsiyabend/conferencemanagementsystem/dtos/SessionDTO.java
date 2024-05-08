@@ -13,5 +13,6 @@ import java.util.Date;
 @Builder
 public class SessionDTO {
     private int sessionId;
-    private Date date;
+    private Date startDate;
+    private Date endDate;
 }

@@ -1,4 +1,4 @@
-package com.urunsiyabend.conferencemanagementsystem.services.session;
+package com.urunsiyabend.conferencemanagementsystem.services.conference;
 
 public class SessionNotFoundServiceException extends Exception {
     public SessionNotFoundServiceException() {

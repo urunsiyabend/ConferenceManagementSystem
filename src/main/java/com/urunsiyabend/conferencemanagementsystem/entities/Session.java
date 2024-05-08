@@ -12,17 +12,29 @@ import java.util.Date;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
-@Entity
-@Table(name = "session")
 public class Session {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    public enum Status {
+        NOT_STARTED,
+        ONGOING,
+        FINISHED
+    }
+
     private int id;
 
-    @Column(unique = true, nullable = false)
-    private Date date;
+    private Date startDate;
 
-    public boolean isExpired(Date date) {
-        return date.after(this.date);
+    private Date endDate;
+
+    public Status getStatus(Date date) {
+        if (startDate != null && endDate != null) {
+            if (startDate.before(date)) {
+                return Status.NOT_STARTED;
+            }
+            if (startDate.after(date) && endDate.before(date)) {
+                return Status.ONGOING;
+            }
+            return Status.FINISHED;
+            }
+        return Status.NOT_STARTED;
     }
 }
