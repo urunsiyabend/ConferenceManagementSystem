@@ -13,9 +13,13 @@ import java.util.Collection;
 public class ConferenceService {
     IConferenceRepository conferenceRepository;
 
-    @Autowired
+
     public ConferenceService(IConferenceRepository conferenceRepository){
         this.conferenceRepository = conferenceRepository;
+    }
+
+    public void createConference(Conference conference) {
+        conferenceRepository.createConference(conference);
     }
 
     public Conference getConferenceById(int id) throws ConferenceNotFoundException {
@@ -26,13 +30,13 @@ public class ConferenceService {
         return conferenceRepository.findAll();
     }
 
-    public void createSession(int conferenceId,SessionDTO sessionDTO) throws InvalidSessionException {
+    public void createSession(int conferenceId,Session session) throws InvalidSessionException {
         conferenceRepository.createSession(conferenceId,
                 Session
                         .builder()
-                        .id(sessionDTO.getSessionId())
-                        .startDate(sessionDTO.getStartDate())
-                        .endDate(sessionDTO.getEndDate())
+                        .id(session.getId())
+                        .startDate(session.getStartDate())
+                        .endDate(session.getEndDate())
                         .build()
         );
     }

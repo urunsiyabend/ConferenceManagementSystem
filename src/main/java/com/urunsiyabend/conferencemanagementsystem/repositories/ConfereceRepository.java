@@ -32,17 +32,20 @@ public class ConfereceRepository implements IConferenceRepository {
 
     @Override
     public void createConference(Conference conference) {
-
+        conferences.put(conference.getId(), conference);
     }
 
     @Override
     public void updateConference(Conference conference) {
+        if (conferences.containsKey(conference.getId())) {
+            conferences.put(conference.getId(), conference);
+        }
 
     }
 
     @Override
     public void deleteConference(Conference conference) {
-
+        conferences.remove(conference.getId());
     }
 
     @Override

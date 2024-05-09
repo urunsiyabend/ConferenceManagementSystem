@@ -1,5 +1,6 @@
 package com.urunsiyabend.conferencemanagementsystem.dtos;
 
+import com.urunsiyabend.conferencemanagementsystem.entities.Session;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,4 +16,5 @@ public class SessionDTO {
     private int sessionId;
     private Date startDate;
     private Date endDate;
+
 }

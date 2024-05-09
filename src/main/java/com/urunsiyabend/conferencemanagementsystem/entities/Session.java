@@ -25,12 +25,12 @@ public class Session {
 
     private Date endDate;
 
-    public Status getStatus(Date date) {
+    public Status getStatus(Date sDate , Date eDate) {
         if (startDate != null && endDate != null) {
-            if (startDate.before(date)) {
+            if (startDate.before(sDate)) {
                 return Status.NOT_STARTED;
             }
-            if (startDate.after(date) && endDate.before(date)) {
+            if ((startDate.after(sDate) || startDate.equals(sDate)) && (sDate.equals(endDate) || sDate.before(endDate))) {
                 return Status.ONGOING;
             }
             return Status.FINISHED;

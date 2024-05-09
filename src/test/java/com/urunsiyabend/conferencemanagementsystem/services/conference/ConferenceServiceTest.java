@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -20,6 +21,7 @@ class ConferenceServiceTest {
     void setUp() throws Exception {
         IConferenceRepository conferenceRepository = new ConfereceRepository();
         conferenceService = new ConferenceService(conferenceRepository);
+        conferenceService.createConference(new Conference(2,"title" ,"descp", new HashMap<>()));
     }
 
     @Test
@@ -36,16 +38,22 @@ class ConferenceServiceTest {
 
     @Test
     void createSession() throws SessionNotFoundServiceException, ConferenceNotFoundException,InvalidSessionException {
-        conferenceService.createSession(1, new SessionDTO(3, new Date(2024,5,15,12,30,0) , new Date(2024, 5,15,13,30,0)));
+        conferenceService.createSession(1, new Session(3, new Date(2024,5,15,12,30,0) , new Date(2024, 5,15,13,30,0)));
         assertDoesNotThrow(() ->
                 conferenceService.getSessionById(1,3)
         );
         Conference conference = conferenceService.getConferenceById(1);
 
         assertThrows(InvalidSessionException.class ,() ->
-                conferenceService.createSession(1 , new SessionDTO(4 , new Date(2024, 5 , 15,12,30,0),  new Date(2024, 5 , 15,13,0,0)))
+                conferenceService.createSession(1 , new Session(4 , new Date(2024, 5 , 15,12,30,0),  new Date(2024, 5 , 15,13,0,0)))
 
         );
+
+        assertDoesNotThrow(() ->
+                conferenceService.createSession(1 , new Session(5, new Date(2024,6,15,12,30,0),  new Date(2024, 6,15,13,0,0))));
+
+        assertDoesNotThrow(() ->
+                conferenceService.createSession(2 ,new Session(4 , new Date(2024, 5 , 15,12,30,0),  new Date(2024, 5 , 15,13,0,0))));
 
         Session session = conference.getSession(3);
         assertNotNull(session);
@@ -70,5 +78,6 @@ class ConferenceServiceTest {
 
     @Test
     void fetchAllSessions() {
+
     }
 }

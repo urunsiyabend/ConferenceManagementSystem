@@ -2,6 +2,7 @@ package com.urunsiyabend.conferencemanagementsystem.entities;
 
 import com.urunsiyabend.conferencemanagementsystem.services.conference.InvalidSessionException;
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,21 +28,18 @@ public class Conference {
 
     HashMap<Integer, Session> sessions;
 
-//    HashMap<Integer, Paper> papers = new HashMap<>();
+    HashMap<Integer, Paper> papers = new HashMap<>();
 
     public void addSession(Session session) throws InvalidSessionException {
-        if (getOngoingSession(session.getStartDate()) != null) {
-            throw new InvalidSessionException("There is already an ongoing session");
-        }
-        if (getOngoingSession(session.getEndDate()) != null) {
+        if (getOngoingSession(session.getStartDate() , session.getEndDate()) != null) {
             throw new InvalidSessionException("There is already an ongoing session");
         }
         sessions.put(session.getId(), session);
     }
 
-    public Session getOngoingSession(Date date) {
+    public Session getOngoingSession(Date SDate, Date EDate) throws InvalidSessionException {
         for (Session s : sessions.values()) {
-            if (s.getStatus(date) == Session.Status.ONGOING) {
+            if (s.getStatus(SDate , EDate) == Session.Status.ONGOING) {
                 return s;
             }
         }
@@ -57,7 +55,7 @@ public class Conference {
         sessions.remove(id);
     }
 
-//    public void addPaper(Paper paper) {
-//        paperList.add(paper);
-//    }
+    public void addPaper(Paper paper) {
+        papers.put(paper.getId(), paper);
+    }
 }
