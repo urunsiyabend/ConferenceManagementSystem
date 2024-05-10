@@ -1,21 +1,24 @@
 package com.urunsiyabend.conferencemanagementsystem.services.conference;
 
 import com.urunsiyabend.conferencemanagementsystem.dtos.SessionDTO;
-import com.urunsiyabend.conferencemanagementsystem.entities.Conference;
-import com.urunsiyabend.conferencemanagementsystem.entities.Session;
+import com.urunsiyabend.conferencemanagementsystem.entities.*;
 import com.urunsiyabend.conferencemanagementsystem.repositories.IConferenceRepository;
+import com.urunsiyabend.conferencemanagementsystem.repositories.IUserRepository;
+import com.urunsiyabend.conferencemanagementsystem.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
+import java.util.*;
 
 @Service
 public class ConferenceService {
+    private final IUserRepository userRepository;
     IConferenceRepository conferenceRepository;
 
-
-    public ConferenceService(IConferenceRepository conferenceRepository){
+    @Autowired
+    public ConferenceService(IConferenceRepository conferenceRepository, IUserRepository userRepository) {
         this.conferenceRepository = conferenceRepository;
+        this.userRepository = userRepository;
     }
 
     public void createConference(Conference conference) {
@@ -26,11 +29,11 @@ public class ConferenceService {
         return conferenceRepository.findConferenceById(id).orElseThrow(ConferenceNotFoundException::new);
     }
 
-    public Collection<Conference> FetchAllConferences(){
+    public Collection<Conference> FetchAllConferences() {
         return conferenceRepository.findAll();
     }
 
-    public void createSession(int conferenceId,Session session) throws InvalidSessionException {
+    public void createSession(int conferenceId, Session session) throws InvalidSessionException {
         conferenceRepository.createSession(conferenceId,
                 Session
                         .builder()
@@ -50,5 +53,43 @@ public class ConferenceService {
 
     public Collection<Session> fetchAllSessions(int conferenceId) {
         return conferenceRepository.findSessionsByConferenceId(conferenceId);
+    }
+
+    public void addPaper(int conferenceId, Paper paper) {
+        conferenceRepository.addPaper(conferenceId, paper);
+    }
+
+    public void updatePaper(int conferenceId, Paper paper) {
+        conferenceRepository.updatePaper(conferenceId, paper);
+    }
+
+    public void deletePaper(int conferenceId, Paper paper) {
+        conferenceRepository.deletePaper(conferenceId, paper);
+    }
+
+    public void assignPaper(int conferenceId, Paper paper) {
+        List<User> reviewers = new ArrayList<>(userRepository.findAllByRole(User.Role.REVIEWER));
+
+        Random random = new Random();
+        int randomId = random.nextInt(reviewers.size());
+
+        User reviewer = reviewers.get(randomId);
+
+        conferenceRepository.addPaper(conferenceId, paper);
+        reviewer.assignPaper(paper);
+
+        paper.addReview(Review.builder()
+                .status(Review.ReviewStatus.PENDING)
+                .reviwerId(reviewer.getId())
+                .assignDate(new Date(System.currentTimeMillis()))
+                .dueDate(new Date(System.currentTimeMillis() + (7 * 24 * 60 * 60 * 1000)))
+                .id(random.nextInt())
+                .build())
+        ;
+    }
+
+    public void reviewPaper(int conferenceId, int paperId, Review review) {
+        Paper paper = conferenceRepository.getPaper(conferenceId, paperId);
+        paper.addReview(review);
     }
 }

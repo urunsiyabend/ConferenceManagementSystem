@@ -1,10 +1,12 @@
 package com.urunsiyabend.conferencemanagementsystem.repositories;
 
 import com.urunsiyabend.conferencemanagementsystem.entities.Conference;
+import com.urunsiyabend.conferencemanagementsystem.entities.Paper;
 import com.urunsiyabend.conferencemanagementsystem.entities.Session;
 import com.urunsiyabend.conferencemanagementsystem.services.conference.InvalidSessionException;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface IConferenceRepository {
@@ -25,4 +27,14 @@ public interface IConferenceRepository {
     Optional<Session> findSessionById(int conferenceId, int sessionId);
 
     Collection<Session> findSessionsByConferenceId(int id);
+
+    void addPaper(int conferenceId, Paper paper);
+
+    void updatePaper(int conferenceId, Paper paper);
+
+    void deletePaper(int conferenceId, Paper paper);
+
+    Paper getPaper(int conferenceId, int paperId);
+
+    List<Integer> findReviewersIdsByPaperId(int conferenceId, int paperId);
 }

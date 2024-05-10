@@ -60,7 +60,7 @@ public class AuthenticationService implements IAuthenticationService {
                 .password(request.getPassword())
                 .name(request.getFirstName())
                 .surname(request.getLastName())
-                .role("user")
+                .role(User.Role.REVIEWER)
                 .build();
 
         repository.save(user);

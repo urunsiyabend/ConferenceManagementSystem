@@ -1,13 +1,15 @@
 package com.urunsiyabend.conferencemanagementsystem.services.conference;
 
 import com.urunsiyabend.conferencemanagementsystem.dtos.SessionDTO;
-import com.urunsiyabend.conferencemanagementsystem.entities.Conference;
-import com.urunsiyabend.conferencemanagementsystem.entities.Session;
+import com.urunsiyabend.conferencemanagementsystem.entities.*;
 import com.urunsiyabend.conferencemanagementsystem.repositories.ConfereceRepository;
 import com.urunsiyabend.conferencemanagementsystem.repositories.IConferenceRepository;
+import com.urunsiyabend.conferencemanagementsystem.repositories.IUserRepository;
+import com.urunsiyabend.conferencemanagementsystem.repositories.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,12 +18,15 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ConferenceServiceTest {
     private ConferenceService conferenceService;
+    ConfereceRepository conferenceRepository;
+    IUserRepository userRepository;
 
     @BeforeEach
     void setUp() throws Exception {
-        IConferenceRepository conferenceRepository = new ConfereceRepository();
-        conferenceService = new ConferenceService(conferenceRepository);
-        conferenceService.createConference(new Conference(2,"title" ,"descp", new HashMap<>()));
+        conferenceRepository = new ConfereceRepository();
+        userRepository = new UserRepository();
+        conferenceService = new ConferenceService(conferenceRepository , userRepository);
+        conferenceService.createConference(new Conference(2,"title" ,"descp", new HashMap<>(), new HashMap<>()));
     }
 
     @Test
@@ -78,6 +83,61 @@ class ConferenceServiceTest {
 
     @Test
     void fetchAllSessions() {
+
+    }
+
+    @Test
+    void assignPaper(){
+        User reviewer = userRepository.findAllByRole(User.Role.REVIEWER).get(0);
+
+        assertTrue(reviewer.canAssignPaper());
+
+        conferenceService.assignPaper(1, Paper.builder()
+                        .id(2)
+                        .description("test")
+                        .subject("Test")
+                        .title("TEST")
+                        .reviews(new ArrayList<>())
+                .build());
+
+        assertFalse(reviewer.getAssignedPapers().isEmpty());
+
+        Paper paper = conferenceRepository.getPaper(1, 2);
+        assertEquals(paper.getReviewStatus(paper.getReviews().get(0).getId()), Review.ReviewStatus.PENDING);
+
+        conferenceService.assignPaper(1, Paper.builder()
+                .id(4)
+                .description("test")
+                .subject("Test")
+                .title("TEST")
+                        .reviews(new ArrayList<>())
+                .build());
+
+        assertFalse(reviewer.canAssignPaper());
+        assertThrows(Exception.class , ()->
+                conferenceService.assignPaper(1, Paper.builder()
+                        .id(6)
+                        .description("test")
+                        .subject("Test")
+                        .title("TEST")
+                                .reviews(new ArrayList<>())
+                        .build()));
+    }
+
+    @Test
+    void reviewPaper(){
+        User reviewer = userRepository.findAllByRole(User.Role.REVIEWER).get(0);
+
+        assertTrue(reviewer.canAssignPaper());
+
+        conferenceService.assignPaper(1, Paper.builder()
+                .id(2)
+                .description("test")
+                .subject("Test")
+                .title("TEST")
+                .reviews(new ArrayList<>())
+                .build());
+
 
     }
 }

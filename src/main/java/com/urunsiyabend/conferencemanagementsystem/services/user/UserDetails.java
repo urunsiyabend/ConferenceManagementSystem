@@ -19,7 +19,7 @@ public class UserDetails implements org.springframework.security.core.userdetail
     public UserDetails(User user) {
         this.username = user.getEmail();
         this.password = user.getPassword();
-        this.authorities = List.of((GrantedAuthority) () -> user.getRole());
+        this.authorities = List.of((GrantedAuthority) () -> user.getRole().toString());
     }
 
     @Override

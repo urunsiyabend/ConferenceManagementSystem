@@ -7,8 +7,6 @@
         <option name="sourceFilePath" value="docker-compose.yaml" />
       </settings>
     </deployment>
-    <method v="2">
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Build" run_configuration_type="MavenRunConfiguration" />
-    </method>
+    <method v="2" />
   </configuration>
 </component>
