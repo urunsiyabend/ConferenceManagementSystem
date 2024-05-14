@@ -1,6 +1,5 @@
 package com.urunsiyabend.conferencemanagementsystem.entities;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +19,8 @@ public class Session {
     }
 
     private int id;
+
+    private String title;
 
     private Date startDate;
 

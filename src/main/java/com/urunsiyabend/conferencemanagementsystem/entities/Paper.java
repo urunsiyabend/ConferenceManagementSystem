@@ -1,7 +1,5 @@
 package com.urunsiyabend.conferencemanagementsystem.entities;
 
-import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,10 +16,16 @@ public class Paper {
     private String subject;
     private String title;
     private String description;
-
     private List<Review> reviews;
 
     public void addReview(Review review) {
+        // if there is any review with the same reviewer id throw an exception
+        for (Review rev : reviews){
+            if (rev.getReviewerId() == review.getReviewerId()){
+                throw new IllegalArgumentException("Reviewer already assigned");
+            }
+        }
+
         reviews.add(review);
     }
 
@@ -34,13 +38,26 @@ public class Paper {
         return null;
     }
 
-    public void updateReview(Review review) {
-        for (Review review1 : reviews){
-            if (review1.getId() == review.getId()){
-                reviews.remove(review1);
-                reviews.add(review);
+    public Review getAssignment(int assigneeId) {
+        for (Review rev : reviews){
+            if (rev.getReviewerId() == assigneeId){
+                return rev;
             }
         }
+        return null;
     }
 
+    public void updateReview(int assigneeId, Review.ReviewStatus status) {
+        Review assignment = getAssignment(assigneeId);
+
+        if (assignment == null) {
+            throw new IllegalArgumentException("No review found for the assignee");
+        }
+
+        if (getReviewStatus(assignment.getId()) == Review.ReviewStatus.ACCEPTED || getReviewStatus(assignment.getId()) == Review.ReviewStatus.REJECTED) {
+            throw new IllegalArgumentException("Review already accepted or rejected");
+        }
+
+        assignment.setStatus(status);
+    }
 }

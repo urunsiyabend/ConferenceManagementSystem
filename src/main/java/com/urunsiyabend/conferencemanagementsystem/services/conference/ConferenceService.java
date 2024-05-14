@@ -1,10 +1,9 @@
 package com.urunsiyabend.conferencemanagementsystem.services.conference;
 
-import com.urunsiyabend.conferencemanagementsystem.dtos.SessionDTO;
+import com.urunsiyabend.conferencemanagementsystem.dtos.AssignmentDTO;
 import com.urunsiyabend.conferencemanagementsystem.entities.*;
 import com.urunsiyabend.conferencemanagementsystem.repositories.IConferenceRepository;
 import com.urunsiyabend.conferencemanagementsystem.repositories.IUserRepository;
-import com.urunsiyabend.conferencemanagementsystem.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +20,8 @@ public class ConferenceService {
         this.userRepository = userRepository;
     }
 
-    public void createConference(Conference conference) {
-        conferenceRepository.createConference(conference);
+    public Conference createConference(Conference conference) {
+        return conferenceRepository.createConference(conference);
     }
 
     public Conference getConferenceById(int id) throws ConferenceNotFoundException {
@@ -55,6 +54,14 @@ public class ConferenceService {
         return conferenceRepository.findSessionsByConferenceId(conferenceId);
     }
 
+    public Collection<Paper> fetchAllPapers(int conferenceId) {
+        return conferenceRepository.findPapersByConferenceId(conferenceId);
+    }
+
+    public Paper getPaper(int conferenceId, int paperId) {
+        return conferenceRepository.getPaper(conferenceId, paperId);
+    }
+
     public void addPaper(int conferenceId, Paper paper) {
         conferenceRepository.addPaper(conferenceId, paper);
     }
@@ -67,7 +74,7 @@ public class ConferenceService {
         conferenceRepository.deletePaper(conferenceId, paper);
     }
 
-    public void assignPaper(int conferenceId, Paper paper) {
+    public void assignPaper(int conferenceId, Paper paper, Date dueDate) {
         List<User> reviewers = new ArrayList<>(userRepository.findAllByRole(User.Role.REVIEWER));
 
         Random random = new Random();
@@ -80,7 +87,7 @@ public class ConferenceService {
 
         paper.addReview(Review.builder()
                 .status(Review.ReviewStatus.PENDING)
-                .reviwerId(reviewer.getId())
+                .reviewerId(reviewer.getId())
                 .assignDate(new Date(System.currentTimeMillis()))
                 .dueDate(new Date(System.currentTimeMillis() + (7 * 24 * 60 * 60 * 1000)))
                 .id(random.nextInt())
@@ -88,8 +95,55 @@ public class ConferenceService {
         ;
     }
 
-    public void reviewPaper(int conferenceId, int paperId, Review review) {
+    public Collection<Paper> getAssignedPapers(int reviewerId) {
+        Collection<Paper> papers = new ArrayList<>();
+
+        for (Conference conference : conferenceRepository.findAll()) {
+            for (Paper paper : conferenceRepository.findPapersByConferenceId(conference.getId())) {
+                for (Review review : paper.getReviews()) {
+                    if (review.getReviewerId() == reviewerId) {
+                        papers.add(paper);
+                    }
+                }
+            }
+        }
+
+        return papers;
+    }
+
+    public Collection<AssignmentDTO> getAssignments(int reviewerId) {
+        Collection<AssignmentDTO> assignments = new ArrayList<>();
+
+        for (Conference conference : conferenceRepository.findAll()) {
+            for (Paper paper : conferenceRepository.findPapersByConferenceId(conference.getId())) {
+                for (Review review : paper.getReviews()) {
+                    if (review.getReviewerId() == reviewerId) {
+                        assignments.add(AssignmentDTO.builder()
+                                .conferenceId(conference.getId())
+                                .paperId(paper.getId())
+                                .reviewerId(reviewerId)
+                                .reviewId(review.getId())
+                                .status(review.getStatus())
+                                .assignmentDate(review.getAssignDate().toString())
+                                .dueDate(review.getDueDate().toString())
+                                .build());
+                    }
+                }
+            }
+        }
+
+        return assignments;
+    }
+
+    public void updateReview(int conferenceId, int paperId, int reviewerId, Review.ReviewStatus status) {
+//        Collection<Paper> assignedPapers = getAssignedPapers(reviewerId);
+
+        Conference conference = conferenceRepository.findConferenceById(conferenceId).orElseThrow(IllegalArgumentException::new);
+
         Paper paper = conferenceRepository.getPaper(conferenceId, paperId);
-        paper.addReview(review);
+
+        System.out.println(paper.getReviews());
+
+        paper.updateReview(reviewerId, status);
     }
 }

@@ -16,11 +16,38 @@ public class UserRepository implements IUserRepository {
 
     public UserRepository() {
         User user = User.builder()
+                .id(1)
                 .email("admin@test.com")
                 .password("admintest")
-                .name("admin")
-                .surname("admin")
+                .name("Super")
+                .surname("Admin")
+                .role(User.Role.ORGANIZER)
+                .assignedPapers(new ArrayList<>())
+                .maxNumberOfPapers(2)
+                .build();
+
+        users.put(user.getEmail(), user);
+
+        user = User.builder()
+                .id(2)
+                .email("reviewer@test.com")
+                .password("reviewertest")
+                .name("Review")
+                .surname("Er")
                 .role(User.Role.REVIEWER)
+                .assignedPapers(new ArrayList<>())
+                .maxNumberOfPapers(2)
+                .build();
+
+        users.put(user.getEmail(), user);
+
+        user = User.builder()
+                .id(3)
+                .email("presenter@test.com")
+                .password("presentertest")
+                .name("Present")
+                .surname("Er")
+                .role(User.Role.PRESENTER)
                 .assignedPapers(new ArrayList<>())
                 .maxNumberOfPapers(2)
                 .build();

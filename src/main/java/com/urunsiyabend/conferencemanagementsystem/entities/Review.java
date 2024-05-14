@@ -1,24 +1,31 @@
 package com.urunsiyabend.conferencemanagementsystem.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
+@ToString
 @Builder
 public class Review {
+    @Getter
     public enum ReviewStatus {
-        ACCEPTED,
-        REJECTED,
-        PENDING
+        ACCEPTED("accepted"),
+        REJECTED("rejected"),
+        PENDING("pending");
+
+        private final String status;
+
+        ReviewStatus(String status) {
+            this.status = status;
+        }
+
     }
+
     private int id;
-    private int reviwerId;
+    private int reviewerId;
     private Date assignDate;
     private Date dueDate;
     private ReviewStatus status;

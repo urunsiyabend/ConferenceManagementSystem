@@ -1,8 +1,6 @@
 package com.urunsiyabend.conferencemanagementsystem.entities;
 
 import com.urunsiyabend.conferencemanagementsystem.services.conference.InvalidSessionException;
-import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,14 +14,10 @@ import java.util.HashMap;
 @AllArgsConstructor
 @Builder
 public class Conference {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    @Column
     private String title;
 
-    @Column
     private String description;
 
     HashMap<Integer, Session> sessions;

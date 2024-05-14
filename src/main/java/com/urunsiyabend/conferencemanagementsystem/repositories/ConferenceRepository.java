@@ -7,32 +7,51 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public class ConfereceRepository implements IConferenceRepository {
-    HashMap<Integer, Conference> conferences = new HashMap<>();
+public class ConferenceRepository implements IConferenceRepository {
+    HashMap<Integer, Conference> conferences;
 
-    public ConfereceRepository() throws InvalidSessionException {
+    static int ID_COUNTER = 2;
+
+    public ConferenceRepository() throws InvalidSessionException {
+        conferences = new HashMap<>();
+
+        Paper paper = Paper.builder()
+                .id(1)
+                .title("First Paper")
+                .description("This is the first paper")
+                .subject("Neural Networks")
+                .reviews(new ArrayList<>())
+                .build();
+
         Session session = Session.builder()
                 .id(1)
+                .title("First Session")
                 .startDate(new Date(System.currentTimeMillis()))
-                .endDate(new Date(System.currentTimeMillis()))
+                .endDate(new Date(System.currentTimeMillis() + 1000 * 60 * 60) // 1 hour later
+                )
                 .build();
 
         Conference conference = Conference.builder()
                 .id(1)
-                .title("Konu")
-                .description("Konular")
+                .title("First Conference")
+                .description("This is the first conference")
                 .sessions(new HashMap<>())
                 .papers(new HashMap<>())
                 .build();
 
         conference.addSession(session);
+        conference.addPaper(paper);
 
         conferences.put(conference.getId(), conference);
     }
 
     @Override
-    public void createConference(Conference conference) {
+    public Conference createConference(Conference conference) {
+        if (conference.getId() == 0) {
+            conference.setId(ID_COUNTER++);
+        }
         conferences.put(conference.getId(), conference);
+        return findConferenceById(conference.getId()).orElse(null);
     }
 
     @Override
@@ -55,7 +74,7 @@ public class ConfereceRepository implements IConferenceRepository {
 
     @Override
     public Collection<Conference> findAll() {
-        return List.of();
+        return conferences.values();
     }
 
     @Override
@@ -84,6 +103,12 @@ public class ConfereceRepository implements IConferenceRepository {
     public Collection<Session> findSessionsByConferenceId(int id) {
         Conference conference = conferences.get(id);
         return conference.getSessions().values();
+    }
+
+    @Override
+    public Collection<Paper> findPapersByConferenceId(int id) {
+        Conference conference = conferences.get(id);
+        return conference.getPapers().values();
     }
 
     @Override
@@ -116,7 +141,7 @@ public class ConfereceRepository implements IConferenceRepository {
         List<Integer> reviewerIds = new ArrayList<>();
 
         for (Review review : paper.getReviews()){
-            reviewerIds.add(review.getReviwerId());
+            reviewerIds.add(review.getReviewerId());
         }
 
         return reviewerIds;

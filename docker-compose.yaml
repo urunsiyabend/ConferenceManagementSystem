@@ -6,27 +6,29 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: app
-    depends_on:
-      - db
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=my-secret-pw
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgredb
-      - SPRING_DATASOURCE_USERNAME=postgres
-      - SPRING_DATASOURCE_PASSWORD=my-secret-pw
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
-      - SPRING_JPA_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQL81Dialect
-      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
-
     ports:
       - "8080:8080"
+    expose:
+      - "8080"
 
-  db:
-    image: "postgres:15-alpine"
-    container_name: db
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=my-secret-pw
-      - POSTGRES_DB=postgredb
-    ports:
-      - "5432:5432"
+#    depends_on:
+#      - db
+#    environment:
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=my-secret-pw
+##      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgredb
+#      - SPRING_DATASOURCE_USERNAME=postgres
+#      - SPRING_DATASOURCE_PASSWORD=my-secret-pw
+#      - SPRING_JPA_HIBERNATE_DDL_AUTO=create
+#      - SPRING_JPA_HIBERNATE_DIALECT=org.hibernate.dialect.PostgreSQL81Dialect
+#      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+
+#  db:
+#    image: "postgres:15-alpine"
+#    container_name: db
+#    environment:
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=my-secret-pw
+#      - POSTGRES_DB=postgredb
+#    ports:
+#      - "5432:5432"

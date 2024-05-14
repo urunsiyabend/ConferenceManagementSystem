@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IConferenceRepository {
-    void createConference(Conference conference);
+    Conference createConference(Conference conference);
     void updateConference(Conference conference);
     void deleteConference(Conference conference);
 
@@ -27,6 +27,8 @@ public interface IConferenceRepository {
     Optional<Session> findSessionById(int conferenceId, int sessionId);
 
     Collection<Session> findSessionsByConferenceId(int id);
+
+    Collection<Paper> findPapersByConferenceId(int id);
 
     void addPaper(int conferenceId, Paper paper);
 
